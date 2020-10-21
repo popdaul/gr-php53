@@ -58,6 +58,13 @@ RUN buildDeps=" \
 	&& apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false $buildDeps \
 	&& make clean
 
+RUN mkdir xdebug \
+	&& cp /tmp/pkg/xdebug-2.2.7.tgz / \
+	&& tar -xf xdebug-2.2.7.tgz -C xdebug --strip-components=1 \
+	&& ( cd xdebug && phpize && ./configure && make && make install ) \
+	&& docker-php-ext-enable xdebug \
+	&& cd / && rm -rf xdebug && rm -rf xdebug-2.2.7.tgz
+
 COPY docker-php-ext-* /usr/local/bin/
 
 # COPY gr-php53-ext-install.sh /usr/local/bin/
